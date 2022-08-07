@@ -6,7 +6,7 @@ on:
       - "alpha-*"
 
 jobs:
-  build-and-deploy-website:
+  build-and-deploy-alpha-library:
     runs-on: ubuntu-latest
 
     concurrency:
@@ -18,6 +18,8 @@ jobs:
 
       - name: Configure environment
         uses: ./.github/workflows/actions/build-env-setup
+        with:
+          npmToken: ${{ secrets.NPM_TOKEN }}
 
       - name: Build, Test, Package
         run: yarn prepare-to-publish

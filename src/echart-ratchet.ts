@@ -31,12 +31,8 @@ export class EChartRatchet {
     if (!config) {
       throw new Error('You must supply an config parameter');
     }
-    let rval: Buffer = null;
     const canvas: Canvas = new Canvas(config.width, config.height);
-    if (config.font) {
-      canvas.getContext('2d').font = config.font;
-    }
-    rval = await this.renderChartUsingProvidedCanvas(opts, canvas);
+    const rval: Buffer = await this.renderChartUsingProvidedCanvas(opts, canvas);
 
     return rval;
   }

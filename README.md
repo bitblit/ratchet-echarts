@@ -7,40 +7,47 @@ versions of echarts, and the new prebuilt versions of canvas in my Lambda functi
 and will be bringing in type information.
 
 ### Install
-OS | Command
------ | -----
-OS X | `brew install pkg-config cairo pango libpng jpeg giflib`
-Ubuntu | `sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++`
-Fedora | `sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel`
-Solaris | `pkgin install cairo pango pkg-config xproto renderproto kbproto xextproto`
-Windows | [Instructions on our wiki](https://github.com/Automattic/node-canvas/wiki/Installation---Windows)
+
+Note: Since this library depends on Echarts >= 5.x and node-canvas (canvas) >= 2.9.3, it auto-bundles in the 
+correct native libraries (prebuilt) for Windows, OSX, and Linux - see [the canvas github page](https://github.com/Automattic/node-canvas) 
+for details.  Therefore, all you have to do is:
 
 ```
-npm install node-echarts
+npm install @bitblit/ratchet-echarts
 ```
 
 ### Usage
-```javascript
-var node_echarts = require('node-echarts');
-var config = {
-    width: 500, // Image width, type is number.
-    height: 500, // Image height, type is number.
-    option: {}, // Echarts configuration, type is Object.
-    //If the path  is not set, return the Buffer of image.
-    path:  '', // Path is filepath of the image which will be created.
-    enableAutoDispose: true  //Enable auto-dispose echarts after the image is created.
+
+```typescript
+
+import { EChartRatchet } from '../echart-ratchet';
+import { EChartsOption } from 'echarts';
+import fs from 'fs';
+
+const options: EChartsOption = {
+    // Some big echarts thing... see Echarts docs for how to build this
+    //title: {
+    //    text: 'test',
+    //},
+    //...
+};
+
+const canvasConfig: EChartCanvasConfig  = {
+    width: 1000
+    height: 500
 }
 
-node_echarts(config)
+const myChart: Buffer = await EChartRatchet.renderChart(options, canvasConfig);
+fs.writeFileSync('somefile.png', myChart);
+
+// Also could have just written
+// await EChartRatchet.renderChartToPngFile('somefile.png', options, canvasConfig);
 
 ```
 
-### Config
+### EChartCanvasConfig
 
 |name|type|default|description|
 |---|---|---|---|
 |width|Number|500|Image width|
 |height|Number|500|Image height|
-|option|Object|{}|Echarts Options|
-|path|String|-|Path is filepath of the image which will be created. If the path is empty, return buffer.|
-|enableAutoDispose|Boolean|true|Enable auto-dispose echarts after the image is created.|
