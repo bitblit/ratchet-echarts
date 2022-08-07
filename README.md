@@ -6,7 +6,7 @@ indebted.  I have forked it because that library appears to now be dormant, and 
 versions of echarts, and the new prebuilt versions of canvas in my Lambda functions.  I also prefer typescript
 and will be bringing in type information.
 
-### Install
+## Install
 
 Note: Since this library depends on Echarts >= 5.x and node-canvas (canvas) >= 2.9.3, it auto-bundles in the 
 correct native libraries (prebuilt) for Windows, OSX, and Linux - see [the canvas github page](https://github.com/Automattic/node-canvas) 
@@ -16,7 +16,33 @@ for details.  Therefore, all you have to do is:
 npm install @bitblit/ratchet-echarts
 ```
 
-### Usage
+### Special notes for AWS Lambda
+If you are using AWS Lambda (either Node 14/16, or containers built from the AWS parent container for them), you will
+likely encounter the error "/lib64/libz.so.1: version `ZLIB_1.2.9' not found (required by /var/task/node_modules/canvas/build/Release/libpng16.so.16)"
+
+See [the node-canvas issue for more details](https://github.com/Automattic/node-canvas/issues/1779).  The solution
+varies depending on how you use Lambda.  
+
+### Using a custom docker container
+Add this to your container:
+```docker
+# Bring these in to make echarts work...
+# Also requires setting the LD_LIBRARY_PATH variable in the config
+# https://github.com/Automattic/node-canvas/issues/1779
+RUN yum -y install libuuid-devel libmount-devel
+RUN cp /lib64/{libuuid,libmount,libblkid}.so.1 ${LAMBDA_TASK_ROOT}/node_modules/canvas/build/Release/
+# End charts stuff
+```
+
+And then set an environment variable:
+```
+LD_LIBRARY_PATH="${LAMBDA_TASK_ROOT}/modules/api/node_modules/canvas/build/Release:${LD_LIBRARY_PATH}"
+```
+
+### Using one of the AWS Node options
+Use a [prebuilt layer](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:990551184979:applications~lambda-layer-canvas-nodejs)
+
+## Usage
 
 ```typescript
 
