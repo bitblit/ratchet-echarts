@@ -1,5 +1,11 @@
 # node-echarts
-Generate chart by [Apache ECharts (incubating)](https://github.com/apache/incubator-echarts) in Nodejs.
+Generate chart by [Apache ECharts](https://github.com/apache/incubator-echarts) in Nodejs.
+
+This library is forked from [node-echarts](https://github.com/hellosean1025/node-echarts) to which it is highly
+indebted.  I have forked it because that library appears to now be dormant, and I'd like to be able to use newer
+versions of echarts, and the new prebuilt versions of canvas in my Lambda functions.  I also prefer typescript
+and will be bringing in type information.
+
 ### Install
 OS | Command
 ----- | -----
