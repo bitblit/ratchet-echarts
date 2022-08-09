@@ -17,13 +17,42 @@ npm install @bitblit/ratchet-echarts
 ```
 
 ### Special notes for AWS Lambda
+
+Most important - you MUST set your lambda to have sufficient memory - probably 512Mb or more.  If you find yourself
+getting timeouts with no errors logged after adding the library, you most likely have insufficient memory set.
+
+
 If you are using AWS Lambda (either Node 14/16, or containers built from the AWS parent container for them), you will
 likely encounter the error "/lib64/libz.so.1: version `ZLIB_1.2.9' not found (required by /var/task/node_modules/canvas/build/Release/libpng16.so.16)"
 
 See [the node-canvas issue for more details](https://github.com/Automattic/node-canvas/issues/1779).  The solution
 varies depending on how you use Lambda.  
 
-### Using a custom docker container
+### Using a custom docker container (1st way)
+To make sure it is compatible with whatever the current build of the image is, we will build from scratch.  In our
+docker container, we'll add :
+
+```docker
+# To build things in yarn
+RUN yum -y install python3
+RUN yum -y install pkgconfig make
+
+# Specifically for building canvas
+RUN yum -y install gcc-c++ cairo-devel pango-devel libjpeg-turbo-devel giflib-devel
+```
+
+And then, in the container we'll force a clean build, either by using
+```docker
+RUN npm install --build-from-source
+```
+
+or
+
+```docker
+RUN npm_config_build_from_source=true yarn install
+```
+
+### Using a custom docker container (alternate way)
 Add this to your container:
 ```docker
 # Bring these in to make echarts work...
