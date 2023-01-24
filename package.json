@@ -30,7 +30,7 @@
     "remove-compiled-tests": "rimraf ./dist/examples && rimraf ./dist/**/*.spec.d.ts && rimraf ./dist/**/*.spec.js && rimraf ./dist/**/*.spec.js.map",
     "clean": "shx rm -Rf dist",
     "compile-test": "yarn compile && yarn test",
-    "apply-ci-vars": "node node_modules/@bitblit/ratchet/dist/node-only/ci/apply-ci-env-variables-to-files github dist/static/build-properties.json",
+    "apply-ci-vars": "yarn ratchet-apply-ci-env-variables-to-files github dist/static/build-properties.json",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
     "lint-fix": "eslint --fix src/**/*.ts",
